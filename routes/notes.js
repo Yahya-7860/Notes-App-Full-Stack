@@ -1,4 +1,5 @@
 const notesRouter = require("express").Router();
+const { jwtAuth } = require("../middleware");
 const {
   handleAddNote,
   handleGetNotes,
