@@ -9,8 +9,8 @@ const {
 
 notesRouter.get("/get", handleGetNotes);
 notesRouter.post("/add", handleAddNote);
-notesRouter.put("/update", handleUpdateNote);
-notesRouter.delete("/delete", handleDeleteNote);
+notesRouter.put("/update/:id", handleUpdateNote);
+notesRouter.delete("/delete/:id", handleDeleteNote);
 
 module.exports = {
   notesRouter,

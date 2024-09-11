@@ -20,8 +20,7 @@ const login = async (req, res) => {
       id: dbUser.id,
       username: dbUser.username,
     };
-    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: 30000 });
-    console.log(token);
+    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "10m" });
     res
       .status(200)
       .json({ Message: "User Found, Successfully Logged in", token });

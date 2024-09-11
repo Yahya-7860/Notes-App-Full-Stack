@@ -3,7 +3,7 @@ const { notesRouter, registerRouter, loginRouter } = require("./routes");
 const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
-const { PswHashing } = require("./middleware");
+const { PswHashing, jwtAuthentication } = require("./middleware");
 
 const port = process.env.PORT;
 const dbUrl = process.env.DATABASE_URL;
@@ -25,4 +25,4 @@ app.use(express.json());
 
 app.use("/user", loginRouter);
 app.use("/user", PswHashing, registerRouter);
-app.use("/", notesRouter);
+app.use("/note", jwtAuthentication, notesRouter);

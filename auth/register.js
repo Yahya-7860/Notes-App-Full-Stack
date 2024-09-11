@@ -22,7 +22,7 @@ const handleUserRegister = async (req, res) => {
       username: userData.username,
     };
 
-    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: 30000 });
+    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "10m" });
 
     res
       .status(200)

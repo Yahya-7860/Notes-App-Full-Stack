@@ -1,4 +1,4 @@
 const PswHashing = require("./PswHash");
-const jwtAuth = require("./jwtAuth");
+const jwtAuthentication = require("./jwtAuthentication");
 
-module.exports = { PswHashing, jwtAuth };
+module.exports = { PswHashing, jwtAuthentication };

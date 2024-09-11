@@ -1,83 +1,73 @@
-const { noteModel } = require("../model");
+const { noteModel, userModel } = require("../model");
 const parseString = require("xml2js").parseString;
 
 const handleAddNote = async (req, res) => {
-  //! mannually converting string into json like format for text and javascript type
-  // var reqBody = req.body;
-  // var data = {};
-  // var lines = reqBody.split("\n");
-  // lines.forEach((line) => {
-  //   var [key, value] = line.split("=");
-  //   data[key.trim()] = value.trim();
-  // });
-  // const { title, content } = JSON.parse(req.body);
-
-  //! parsing HTML body manually
-  // var rawData = req.body;
-  // const titleMatch = rawData.match(/<title>(.*)<\/title>/);
-  // const contentMatch = rawData.match(/<content>(.*)<\/content>/);
-  // const title = titleMatch[1];
-  // const content = contentMatch[1];
-
-  //! manually parsing xml data into js format using additional library name xml2js
-  // var xmlData = req.body;
-  // var parsedXMLdata = {};
-  // parseString(xmlData, (error, result) => {
-  //   if (result) parsedXMLdata = result;
-  //   else console.log(error);
-  // });
-  // const { title, content } = parsedXMLdata.note; //title and content is array
-
-  // console.log(req);
-  // return res.status(400).send("wip");
-
-  const { title, content } = req.body;
-  if (!title || title === "")
-    return res.status(400).json({ message: "title cannot be empty" });
+  const { title, content, userId } = req.body;
+  if (!title) return res.status(400).json({ message: "title cannot be empty" });
   try {
     const note = await noteModel.create({
       title,
       content,
+      userId,
     });
     res.status(200).json({ message: "Note added succesfully", note });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error", error });
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching the notes", error });
   }
 };
 
 const handleGetNotes = async (req, res) => {
   try {
-    const notes = await noteModel.find();
+    const notes = await noteModel.find({ userId: req.body.userId });
+    if (notes.length === 0) {
+      return res.status(200).json({ Message: "No notes found" });
+    }
     res.json(notes);
   } catch (error) {
-    console.log(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching the notes", error });
   }
 };
 
 const handleDeleteNote = async (req, res) => {
-  var title = req.query.title;
-  if (title) {
+  const { id } = req.params;
+  if (id) {
     try {
-      await noteModel.findOneAndDelete(title);
-      res.send("Document Deleted Successfully");
+      const deletedNote = await noteModel.findByIdAndDelete(id);
+      if (!deletedNote) {
+        return res
+          .status(404)
+          .json({ Message: "Note not found, unable to delete" });
+      }
+      res.status(200).json({ Message: "Note Deleted Successfully" });
     } catch (error) {
-      res.status(404).send(error);
+      res
+        .status(500)
+        .json({ message: "An error occurred while deleting the note", error });
     }
   } else {
-    res.status(404).send("Please provide title");
+    res.status(404).send("Please provide id");
   }
 };
 
 const handleUpdateNote = async (req, res) => {
-  var title = req.query.title;
-  var content = req.query.newcontent;
+  const { content } = req.body;
+  const { id } = req.params;
 
-  if (title && content) {
+  if (id && content) {
     try {
-      await noteModel.findOneAndUpdate({ title: title }, { content: content });
-      res.send("Document updated Successfully");
+      const Note = await noteModel.findByIdAndUpdate(id, { content: content });
+      if (!Note) {
+        return res.status(404).json({ Message: "Note not found" });
+      }
+      res.status(200).json({ Message: "Note updated Successfully" });
     } catch (error) {
-      res.status(404).send(error);
+      res
+        .status(500)
+        .json({ message: "An error occurred while updating the note", error });
     }
   } else {
     res.status(404).send("Please provide title and newcontent both");
