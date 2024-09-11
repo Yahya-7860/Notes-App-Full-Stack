@@ -11,8 +11,8 @@ const jwtAuthentication = async (req, res, next) => {
   const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
   try {
     const decoded_user_data = jwt.verify(token, JWT_SECRET_KEY);
-    console.log(decoded_user_data);
-    req.user = decoded_user_data;
+    const { id } = decoded_user_data;
+    req.userid = id;
     next();
   } catch (error) {
     res

@@ -20,7 +20,7 @@ const handleAddNote = async (req, res) => {
 
 const handleGetNotes = async (req, res) => {
   try {
-    const notes = await noteModel.find({ userId: req.body.userId });
+    const notes = await noteModel.find({ userId: req.userid });
     if (notes.length === 0) {
       return res.status(200).json({ Message: "No notes found" });
     }

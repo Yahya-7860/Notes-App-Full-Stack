@@ -6,7 +6,7 @@ const handleUserRegister = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res
-      .status(401)
+      .status(400)
       .json({ message: "Username and Password both are required." });
   }
 
@@ -24,9 +24,10 @@ const handleUserRegister = async (req, res) => {
 
     const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "10m" });
 
-    res
-      .status(200)
-      .json({ message: "User registered successfully", userData, token });
+    userData.token = token;
+    await userData.save();
+
+    res.status(200).json({ message: "User registered successfully", userData });
   } catch (error) {
     if (error.errorResponse.code === 11000) {
       res.status(401).json({ message: "User already exist" });
