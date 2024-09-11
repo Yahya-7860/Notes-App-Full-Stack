@@ -1,0 +1,30 @@
+.taskbar_container{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+.textbar{
+    border: none;
+    outline: none;
+    box-shadow: .1rem .1rem .5rem var(--gray);
+    border-radius: .5rem;
+    padding: .7rem;
+    width: 30rem;
+    font-size: 1rem;
+    
+}
+.addbtn{
+    border: none;
+    background-color: var(--yellow);
+    padding: .5rem .9rem;
+    border-radius: 2rem;
+    box-shadow: .1rem .1rem .8rem var(--gray);
+}
+.addbtn:hover{
+    background-color: var(--yellow2);
+}
+.addbtn:active{
+    background-color: var(--yellow3)
+}

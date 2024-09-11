@@ -1,0 +1,18 @@
+:root{
+    --gray: rgb(175, 175, 175);
+    --yellow:rgb(12, 148, 0);
+    --yellow2:rgb(10, 126, 0);
+    --yellow3:rgb(7, 88, 0);
+}
+.main_app_container{
+    display: grid;
+    place-items: center;
+}
+.app_container{
+    width: 90vw;
+}
+.noteCardGrid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+
+}   

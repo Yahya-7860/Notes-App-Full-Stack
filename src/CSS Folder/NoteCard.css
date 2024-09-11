@@ -1,0 +1,12 @@
+.cardText{
+    width: 15rem;
+    padding: .9rem .9rem;
+    border-radius: .8rem;
+    box-shadow: 0.1rem .07rem .6rem var(--gray);
+    min-height: 5rem;
+    max-height: auto;
+    margin-bottom: 1rem;
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    white-space: normal;
+}
