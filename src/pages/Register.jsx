@@ -18,24 +18,34 @@ const Register = () => {
     });
   };
 
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userData = await fetch(`http://localhost:8000/user/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-      //hello
-    });
-    setuserExist(false);
 
-    if (userData.status == 401) {
-      setuserExist(true);
-    } else if (userData.status == 200) {
-      navigate("/desktop");
-    }
-    // console.log("user data: ", userData);
+    fetch("http://localhost:8000/user/register", options)
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        setuserExist(false);
+        if (data.message === "User already exist") {
+          setuserExist(true);
+        } else if (data.message === "User registered successfully") {
+          const token = data.userData.token;
+          const userId = data.userData._id;
+          const username = data.userData.username;
+          localStorage.setItem("token", token);
+          localStorage.setItem("userId", userId);
+          localStorage.setItem("username", username);
+          navigate("/desktop");
+        }
+      });
   };
 
   return (
@@ -72,6 +82,9 @@ const Register = () => {
             Register
           </button>
         </form>
+        <p className="register-link">
+          Already have account? <a href="/login">Login</a>
+        </p>
       </div>
     </div>
   );

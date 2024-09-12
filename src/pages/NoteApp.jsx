@@ -1,30 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../App.css";
 import NoteCard from "../components/NoteCard";
 import TaskBar from "../components/TaskBar";
-import { useDispatch, useSelector } from "react-redux";
-import { replaceAllNotes } from "../slice/noteSlice";
+import Navbar from "../components/Navbar";
+import { useSelector, useDispatch } from "react-redux";
+import { clearRedux } from "../slice/noteSlice";
 
 function NoteApp() {
-  const notes = useSelector((state) => state.note.notes);
+  const [notes, setNotes] = useState([]);
   const dispatch = useDispatch();
+  const reduxNotes = useSelector((state) => state.note.notes);
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  };
 
-  // useEffect(() => {
-  //   const storedData = JSON.parse(localStorage.getItem("AllNotesRedux"));
-  //   if (storedData) {
-  //     try {
-  //       const parsedData = JSON.parse(storedData);
-  //       dispatch(replaceAllNotes(parsedData));
-  //     } catch (error) {
-  //       console.error("Error parsing stored data", error);
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    fetch("http://localhost:8000/note/get", options)
+      .then((res) => res.json())
+      .then((data) => {
+        setNotes(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (reduxNotes.length > 0) {
+      setNotes((pre) =>
+        Array.isArray(pre) ? [...pre, ...reduxNotes] : [...reduxNotes]
+      );
+      dispatch(clearRedux());
+    }
+  }, [reduxNotes]);
 
   return (
     <div>
+      <Navbar />
       <div className="main_app_container">
-        <h2>Notes App</h2>
         <div className="app_container">
           <TaskBar />
           <div className="noteCardGrid">
@@ -34,9 +47,10 @@ function NoteApp() {
                 .reverse()
                 .map((OneNote) => (
                   <NoteCard
-                    key={OneNote.id}
-                    id={OneNote.id}
-                    text={OneNote.text}
+                    key={OneNote._id}
+                    id={OneNote._id}
+                    content={OneNote.content}
+                    setNotes={setNotes} //new
                   />
                 ))
             ) : (

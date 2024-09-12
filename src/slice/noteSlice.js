@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  notes: [{}],
+  notes: [],
 };
 
 const noteSlice = createSlice({
@@ -9,7 +9,7 @@ const noteSlice = createSlice({
   initialState,
   reducers: {
     addNote: (state, action) => {
-      state.notes.push({ id: new Date().getTime(), text: action.payload });
+      state.notes.push({ id: new Date().getTime(), content: action.payload });
     },
     deleteNote: (state, action) => {
       state.notes = state.notes.filter((note) => note.id != action.payload);
@@ -17,8 +17,12 @@ const noteSlice = createSlice({
     replaceAllNotes: (state, action) => {
       state.notes.push(action.payload);
     },
+    clearRedux: (state, action) => {
+      state.notes = [];
+    },
   },
 });
 
-export const { addNote, deleteNote, replaceAllNotes } = noteSlice.actions;
+export const { addNote, deleteNote, replaceAllNotes, clearRedux } =
+  noteSlice.actions;
 export default noteSlice.reducer;
